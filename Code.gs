@@ -1,17 +1,4 @@
 function main() {
-  // 楽天カード
-  const rakutenCardPayments = process("label:rakuten/rakutencardpayment", (message) => {
-    const body = message.getPlainBody();
-    const date = RegExp("■利用日: (.*)\r\n").exec(body)[1];
-    const amount = RegExp("■利用金額: (.*)円").exec(body)[1].replace(",", "");
-    const description = RegExp("■利用先: (.*)\r\n").exec(body)[1];
-    const source = "RakutenCard";
-
-    message.moveToTrash();
-
-    return [date, amount, description, source];
-  });
-
   // 楽天ペイ
   const rakutenPayPayments = process("label:rakuten/rakutenpaypayment", (message) => {
     const body = message.getPlainBody();
@@ -25,7 +12,7 @@ function main() {
     return [date, amount, description, source];
   });
 
-  const rows = [].concat(rakutenCardPayments, rakutenPayPayments);
+  const rows = rakutenPayPayments;
   if (rows.length == 0) return;
 
   // Spreadsheetへ保存
