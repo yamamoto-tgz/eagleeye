@@ -12,20 +12,6 @@ function main() {
     return [date, amount, description, source];
   });
 
-  // 楽天デビット
-  const rakutenDebitPayments = process("label:rakuten/rakutendebitpayment", (message) => {
-    const date = Utilities.formatDate(message.getDate(), "JST", "yyyy/MM/dd");
-
-    const body = message.getPlainBody();
-    const amount = RegExp("口座引落分：(.*)円").exec(body)[1];
-    const description = "ﾗｸﾃﾝ ﾃﾞﾋﾞｯﾄ";
-    const source = "RakutenDebit";
-
-    message.moveToTrash();
-
-    return [date, amount, description, source];
-  });
-
   // 楽天ペイ
   const rakutenPayPayments = process("label:rakuten/rakutenpaypayment", (message) => {
     const body = message.getPlainBody();
@@ -39,7 +25,7 @@ function main() {
     return [date, amount, description, source];
   });
 
-  const rows = [].concat(rakutenCardPayments, rakutenDebitPayments, rakutenPayPayments);
+  const rows = [].concat(rakutenCardPayments, rakutenPayPayments);
   if (rows.length == 0) return;
 
   // Spreadsheetへ保存
